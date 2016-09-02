@@ -39,6 +39,7 @@ class TTTrackWriter : public BasicWriter {
     std::auto_ptr<std::vector<float> >                  vt_py;
     std::auto_ptr<std::vector<float> >                  vt_pz;
     std::auto_ptr<std::vector<float> >                  vt_pt;
+    std::auto_ptr<std::vector<float> >                  vt_preEstimatedPt;
     std::auto_ptr<std::vector<float> >                  vt_eta;
     std::auto_ptr<std::vector<float> >                  vt_phi;
     std::auto_ptr<std::vector<float> >                  vt_vx;

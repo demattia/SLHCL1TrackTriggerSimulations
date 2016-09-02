@@ -22,38 +22,39 @@ int TTTrackReader::init(TString src, TString prefixRoad, TString prefixTrack, TS
 TTTrackWriter::TTTrackWriter(int verbose)
 : BasicWriter(verbose),
 
-  vt_px           (new std::vector<float>()),
-  vt_py           (new std::vector<float>()),
-  vt_pz           (new std::vector<float>()),
-  vt_pt           (new std::vector<float>()),
-  vt_eta          (new std::vector<float>()),
-  vt_phi          (new std::vector<float>()),
-  vt_vx           (new std::vector<float>()),
-  vt_vy           (new std::vector<float>()),
-  vt_vz           (new std::vector<float>()),
-  vt_rinv         (new std::vector<float>()),
-  vt_invPt        (new std::vector<float>()),
-  vt_phi0         (new std::vector<float>()),
-  vt_cottheta     (new std::vector<float>()),
-  vt_z0           (new std::vector<float>()),
-  vt_d0           (new std::vector<float>()),
-  vt_chi2         (new std::vector<float>()),
-  vt_ndof         (new std::vector<int>()),
-  vt_chi2_phi     (new std::vector<float>()),
-  vt_chi2_z       (new std::vector<float>()),
-  vt_isGhost      (new std::vector<bool>()),
-  vt_tpId         (new std::vector<int>()),
-  vt_synTpId      (new std::vector<int>()),
-  vt_tower        (new std::vector<unsigned>()),
-  vt_hitBits      (new std::vector<unsigned>()),
-  vt_ptSegment    (new std::vector<unsigned>()),
-  vt_roadRef      (new std::vector<unsigned>()),
-  vt_combRef      (new std::vector<unsigned>()),
-  vt_patternRef   (new std::vector<unsigned>()),
-  vt_stubRefs     (new std::vector<std::vector<unsigned> >()),
-  vt_principals   (new std::vector<std::vector<float> >()),
-  vt_parsInt      (new std::vector<std::vector<Long64_t> >()),
-  vt_chi2TermsInt (new std::vector<std::vector<Long64_t> >()) {}
+  vt_px             (new std::vector<float>()),
+  vt_py             (new std::vector<float>()),
+  vt_pz             (new std::vector<float>()),
+  vt_pt             (new std::vector<float>()),
+  vt_preEstimatedPt (new std::vector<float>()),
+  vt_eta            (new std::vector<float>()),
+  vt_phi            (new std::vector<float>()),
+  vt_vx             (new std::vector<float>()),
+  vt_vy             (new std::vector<float>()),
+  vt_vz             (new std::vector<float>()),
+  vt_rinv           (new std::vector<float>()),
+  vt_invPt          (new std::vector<float>()),
+  vt_phi0           (new std::vector<float>()),
+  vt_cottheta       (new std::vector<float>()),
+  vt_z0             (new std::vector<float>()),
+  vt_d0             (new std::vector<float>()),
+  vt_chi2           (new std::vector<float>()),
+  vt_ndof           (new std::vector<int>()),
+  vt_chi2_phi       (new std::vector<float>()),
+  vt_chi2_z         (new std::vector<float>()),
+  vt_isGhost        (new std::vector<bool>()),
+  vt_tpId           (new std::vector<int>()),
+  vt_synTpId        (new std::vector<int>()),
+  vt_tower          (new std::vector<unsigned>()),
+  vt_hitBits        (new std::vector<unsigned>()),
+  vt_ptSegment      (new std::vector<unsigned>()),
+  vt_roadRef        (new std::vector<unsigned>()),
+  vt_combRef        (new std::vector<unsigned>()),
+  vt_patternRef     (new std::vector<unsigned>()),
+  vt_stubRefs       (new std::vector<std::vector<unsigned> >()),
+  vt_principals     (new std::vector<std::vector<float> >()),
+  vt_parsInt        (new std::vector<std::vector<Long64_t> >()),
+  vt_chi2TermsInt   (new std::vector<std::vector<Long64_t> >()) {}
 
 
 TTTrackWriter::~TTTrackWriter() {}
@@ -66,6 +67,7 @@ int TTTrackWriter::init(TChain* tchain, TString out, TString prefix, TString suf
   //ttree->Branch(prefix + "py"             + suffix, &(*vt_py));
   //ttree->Branch(prefix + "pz"             + suffix, &(*vt_pz));
     ttree->Branch(prefix + "pt"             + suffix, &(*vt_pt));
+    ttree->Branch(prefix + "preEstimatedPt" + suffix, &(*vt_preEstimatedPt));
     ttree->Branch(prefix + "eta"            + suffix, &(*vt_eta));
   //ttree->Branch(prefix + "phi"            + suffix, &(*vt_phi));
   //ttree->Branch(prefix + "vx"             + suffix, &(*vt_vx));
@@ -102,6 +104,7 @@ void TTTrackWriter::fill(const std::vector<TTTrack>& tracks) {
     vt_py              ->clear();
     vt_pz              ->clear();
     vt_pt              ->clear();
+    vt_preEstimatedPt  ->clear();
     vt_eta             ->clear();
     vt_phi             ->clear();
     vt_vx              ->clear();
@@ -132,6 +135,7 @@ void TTTrackWriter::fill(const std::vector<TTTrack>& tracks) {
         //vt_py              ->push_back(momentum.y());
         //vt_pz              ->push_back(momentum.z());
         vt_pt              ->push_back(std::sqrt(momentum.perp2()));
+        vt_preEstimatedPt  ->push_back(0.);
         vt_eta             ->push_back(momentum.eta());
         //vt_phi             ->push_back(momentum.phi());
         //vt_vx              ->push_back(poca.x());
@@ -161,6 +165,7 @@ void TTTrackWriter::fill(const std::vector<TTTrack2>& tracks) {
     vt_py              ->clear();
     vt_pz              ->clear();
     vt_pt              ->clear();
+    vt_preEstimatedPt  ->clear();
     vt_eta             ->clear();
     vt_phi             ->clear();
     vt_vx              ->clear();
@@ -198,6 +203,7 @@ void TTTrackWriter::fill(const std::vector<TTTrack2>& tracks) {
         //vt_py              ->push_back(track.py());
         //vt_pz              ->push_back(track.pz());
         vt_pt              ->push_back(track.pt());
+        vt_preEstimatedPt  ->push_back(track.preEstimatedPt());
         vt_eta             ->push_back(track.eta());
         //vt_phi             ->push_back(track.phi());
         //vt_vx              ->push_back(track.vx());

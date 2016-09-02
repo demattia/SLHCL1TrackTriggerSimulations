@@ -15,6 +15,7 @@ int TrackFitterAlgoLTF::fit(const TTRoadComb& acomb, TTTrack2& atrack)
         }
         normChi2_ = linearizedTrackFitter_->fit(vars, acomb.hitBits);
         fillTrack(linearizedTrackFitter_, atrack);
+        atrack.setPreEstimatedPt(linearizedTrackFitter_->preEstimatedPt());
     }
     else {
         // Arrange the stub coordinates in the format expected by the fitter

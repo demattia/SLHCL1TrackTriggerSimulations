@@ -14,11 +14,11 @@ class TTTrack2 {
     // Constructors
     TTTrack2()
     : rinv_(-999999.), phi0_(-999999.), cottheta_(-999999.), z0_(-999999.), d0_(-999999.),
-      chi2_(-999999.), ndof_(-1), chi2_phi_(-999999.), chi2_z_(-999999.), 
+      chi2_(-999999.), ndof_(-1), chi2_phi_(-999999.), chi2_z_(-999999.),
       matchChi2_(-1),
       isGhost_(false), tpId_(-1), synTpId_(-2), tower_(99), hitBits_(0),
       ptSegment_(0), roadRef_(0), combRef_(0), patternRef_(0),
-      stubRefs_(), principals_() {}
+      stubRefs_(), principals_(), preEstimatedPt_(0) {}
 
     TTTrack2(const TTTrack2& rhs)
     : rinv_(rhs.rinv_), phi0_(rhs.phi0_), cottheta_(rhs.cottheta_), z0_(rhs.z0_), d0_(rhs.d0_),
@@ -27,7 +27,7 @@ class TTTrack2 {
       isGhost_(rhs.isGhost_), tpId_(rhs.tpId_), synTpId_(rhs.synTpId_), tower_(rhs.tower_), hitBits_(rhs.hitBits_),
       ptSegment_(rhs.ptSegment_), roadRef_(rhs.roadRef_), combRef_(rhs.combRef_), patternRef_(rhs.patternRef_),
       stubRefs_(rhs.stubRefs_), principals_(rhs.principals_), parsInt_(rhs.parsInt_),
-      chi2TermsInt_(rhs.chi2TermsInt_) {}
+      chi2TermsInt_(rhs.chi2TermsInt_), preEstimatedPt_(rhs.preEstimatedPt_) {}
 
     // Destructor
     ~TTTrack2() {}
@@ -46,24 +46,25 @@ class TTTrack2 {
         chi2_z_   = chi2_z;
     }
 
-    void setMatchChi2(float matchChi2)	    		            { matchChi2_ = matchChi2; }
-    void setAsGhost()                                       { isGhost_ = true; }
-    void setTpId(int tpId)                                  { tpId_ = tpId; }
-    void setSynTpId(int synTpId)                            { synTpId_ = synTpId; }
-    void setTower(unsigned tower)                           { tower_ = tower; }
-    void setHitBits(unsigned hitBits)                       { hitBits_ = hitBits; }
-    void setPtSegment(unsigned ptSegment)                   { ptSegment_ = ptSegment; }
-    void setRoadRef(unsigned roadRef)                       { roadRef_ = roadRef; }
-    void setCombRef(unsigned combRef)                       { combRef_ = combRef; }
-    void setPatternRef(unsigned patternRef)                 { patternRef_ = patternRef; }
+    void setMatchChi2(const float & matchChi2)	             { matchChi2_ = matchChi2; }
+    void setAsGhost()                                        { isGhost_ = true; }
+    void setTpId(const int tpId)                             { tpId_ = tpId; }
+    void setSynTpId(const int synTpId)                       { synTpId_ = synTpId; }
+    void setTower(const unsigned tower)                      { tower_ = tower; }
+    void setHitBits(const unsigned hitBits)                  { hitBits_ = hitBits; }
+    void setPtSegment(const unsigned ptSegment)              { ptSegment_ = ptSegment; }
+    void setRoadRef(const unsigned roadRef)                  { roadRef_ = roadRef; }
+    void setCombRef(const unsigned combRef)                  { combRef_ = combRef; }
+    void setPatternRef(unsigned patternRef)                  { patternRef_ = patternRef; }
 
-    void addStubRef(unsigned stubRef)                       { stubRefs_.push_back(stubRef); }
-    void setStubRefs(const std::vector<unsigned>& stubRefs) { stubRefs_ = stubRefs; }
+    void addStubRef(const unsigned stubRef)                  { stubRefs_.push_back(stubRef); }
+    void setStubRefs(const std::vector<unsigned>& stubRefs)  { stubRefs_ = stubRefs; }
 
-    void addPrincipal(float principal)                      { principals_.push_back(principal); }
+    void addPrincipal(const float & principal)               { principals_.push_back(principal); }
     void setPrincipals(const std::vector<float>& principals) { principals_ = principals; }
-    void setParsInt(const std::vector<int64_t>& parsInt) { parsInt_ = parsInt; }
+    void setParsInt(const std::vector<int64_t>& parsInt)     { parsInt_ = parsInt; }
     void setChi2TermsInt(const std::vector<int64_t>& chi2TermsInt) { chi2TermsInt_ = chi2TermsInt; }
+    void setPreEstimatedPt(const float & preEstimatedPt)     { preEstimatedPt_ = preEstimatedPt; }
 
     // Getters
     float rinv()                                const { return rinv_; }
@@ -105,6 +106,8 @@ class TTTrack2 {
     unsigned combRef()                          const { return combRef_; }
 
     unsigned patternRef()                       const { return patternRef_; }
+
+    float preEstimatedPt()                      const { return preEstimatedPt_; }
 
     std::vector<unsigned> stubRefs()            const { return stubRefs_; }
     unsigned stubRef(int l)                     const { return stubRefs_.at(l); }
@@ -152,6 +155,7 @@ class TTTrack2 {
     std::vector<float> principals_;
     std::vector<int64_t> parsInt_;
     std::vector<int64_t> chi2TermsInt_;
+    float preEstimatedPt_;
 };
 
 // _____________________________________________________________________________
